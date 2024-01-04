@@ -8,6 +8,8 @@ dotenv.config();
 const url = 'https://production-appsync.degoo.com/graphql';
 const refreshTokenCode = process.env.REFRESH_TOKEN;
 const downloadPath = process.env.DOWNLOAD_PATH ? process.env.DOWNLOAD_PATH : './downloads';
+//Clean error.log file
+fs.writeFileSync('error.log', '');
 
 async function refreshToken() {
     const url = 'https://rest-api.degoo.com/access-token/v2';
@@ -131,6 +133,7 @@ async function inspectFolder(parentID, folderPath = downloadPath, toDownload = f
                 if (result.getFileChildren5.Items[i].Category == 1 || result.getFileChildren5.Items[i].Category == 2) {
                     // console.log("Name: ", result.getFileChildren5.Items[i].Name, " ID: ", result.getFileChildren5.Items[i].ID, " Category: ", result.getFileChildren5.Items[i].Category, " Size: ", result.getFileChildren5.Items[i].Size, " CreationTime: ", result.getFileChildren5.Items[i].CreationTime, " IsShared: ", result.getFileChildren5.Items[i].IsShared, " ShareTime: ", result.getFileChildren5.Items[i].ShareTime);
                     const newFolderPath = path.join(folderPath, result.getFileChildren5.Items[i].Name);
+                    console.log("Folder checked: "+ newFolderPath)
                     totalSize += parseInt(await inspectFolder(result.getFileChildren5.Items[i].ID, newFolderPath, toDownload));
                 } else {
                     if (toDownload) {
